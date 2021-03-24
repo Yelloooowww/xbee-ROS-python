@@ -24,9 +24,6 @@ PORT = "/dev/ttyUSB0"
 # TODO: Replace with the baud rate of your local module.
 BAUD_RATE = 9600
 
-PARAM_VALUE_PAN_ID = bytearray(b'\x01\x23')
-PARAM_DESTINATION_ADDR = XBee64BitAddress.BROADCAST_ADDRESS
-PARAM_POWER_LEVEL = PowerLevel.LEVEL_HIGH
 
 
 def main():
@@ -38,7 +35,7 @@ def main():
             device,
             x64bit_addr=XBee64BitAddress.from_hex_string("0013A20041AF1A91"),
             node_id="manually_added")
-        device.send_data(remote, "Hello XBee!")
+        device.send_data(remote, "HiHiHi")
 
     finally:
         if device is not None and device.is_open():

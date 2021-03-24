@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 import rospy
-from subt_msgs.srv import xbee
+from xbee_server.srv import xbee
 import random
 import time
+import sys
 
 
 if __name__ == "__main__":
@@ -14,9 +15,9 @@ if __name__ == "__main__":
         print('input error')
         sys.exit(1)
 
-    rospy.wait_for_service('handle_xbee')
+    rospy.wait_for_service('xbee')
     try:
-        handle_xbee = rospy.ServiceProxy('handle_xbee', xbee)
+        handle_xbee = rospy.ServiceProxy('xbee', xbee)
         result = handle_xbee(add, msg)
         print(result)
     except rospy.ServiceException as e:

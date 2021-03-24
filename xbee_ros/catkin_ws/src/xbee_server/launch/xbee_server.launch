@@ -2,7 +2,7 @@
 <launch>
     <arg name="port" default="/dev/ttyUSB0" />
 
-    <node name="xbee_server" pkg="xbee_server" type="xbee_server.py" output="screen" required="true">
+    <node name="xbeee_server" pkg="xbee_server" type="xbeee_server.py" output="screen" required="true">
         <param name="port" value="$(arg port)" />
     </node>
 

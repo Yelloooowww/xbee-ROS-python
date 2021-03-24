@@ -1,5 +1,0 @@
-#Request data
-int8 data
----
-#Response data
-# string result # for mission result
