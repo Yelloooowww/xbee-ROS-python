@@ -1,9 +1,11 @@
-from digi.xbee.devices import XBeeDevice
+import pickle
+import numpy as np
+from digi.xbee.devices import DigiMeshDevice
+from digi.xbee.exception import *
+from digi.xbee.models.address import *
 
-# TODO: Replace with the serial port where your local module is connected to.
-PORT = "/dev/ttyUSB0"
-# TODO: Replace with the baud rate of your local module.
-BAUD_RATE = 9600
+PORT = "/dev/ttyUSB1"
+BAUD_RATE = 115200
 
 
 def main():
@@ -19,7 +21,7 @@ def main():
         def data_receive_callback(xbee_message):
             print('callback')
             print("From %s >> %s" % (xbee_message.remote_device.get_64bit_addr(),
-                                     xbee_message.data.decode()))
+                                     bytes_to_int(xbee_message.data)))
 
         device.add_data_received_callback(data_receive_callback)
 

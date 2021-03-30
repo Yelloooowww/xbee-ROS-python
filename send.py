@@ -18,13 +18,18 @@ from digi.xbee.models.address import XBee64BitAddress
 from digi.xbee.models.status import PowerLevel
 from digi.xbee.models.status import NetworkDiscoveryStatus
 from digi.xbee.devices import XBeeDevice, RemoteXBeeDevice
+from digi.xbee.util.utils import int_to_bytes
 
 # TODO: Replace with the serial port where your local module is connected to.
 PORT = "/dev/ttyUSB0"
 # TODO: Replace with the baud rate of your local module.
 BAUD_RATE = 9600
 
+# a = 100
+# print([i for i in int_to_bytes(a)])
+# print(a)
 
+b = int_to_bytes(1)
 
 def main():
     device = XBeeDevice(PORT, BAUD_RATE)
@@ -33,9 +38,16 @@ def main():
         device.open(force_settings=True)
         remote = RemoteXBeeDevice(
             device,
-            x64bit_addr=XBee64BitAddress.from_hex_string("0013A20041AF1A91"),
+            x64bit_addr=XBee64BitAddress.from_hex_string("0013A20041AF1B1A"),
             node_id="manually_added")
-        device.send_data(remote, "HiHiHi")
+
+        device.send_data( remote, int_to_bytes(171))
+        device.send_data( remote, int_to_bytes(1))
+        device.send_data( remote, int_to_bytes(3))
+        device.send_data( remote, int_to_bytes(10))
+        device.send_data( remote, int_to_bytes(20))
+        device.send_data( remote, int_to_bytes(30))
+        device.send_data( remote, int_to_bytes(60))
 
     finally:
         if device is not None and device.is_open():
