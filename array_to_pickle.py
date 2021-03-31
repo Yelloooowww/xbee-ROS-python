@@ -3,26 +3,31 @@ import numpy as np
 from digi.xbee.devices import DigiMeshDevice
 from digi.xbee.exception import *
 from digi.xbee.models.address import *
+import struct
+
+arr = np.array([[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]], dtype=np.float16)
+byte_arr = pickle.dumps(arr)
+
+pack = bytearray(b'0xAB') #Header
+pack.extend(bytearray(b'0x01')) #Type
+pack.extend( byte_arr[0:5] ) #data
+
+print(pack[0:4])
+print(pack[4:8])
+print(pack[8:])
+
+tmp = bytearray()
+tmp.extend(pack[8:])
+
+pack = bytearray(b'0xAB') #Header
+pack.extend(bytearray(b'0x01')) #Type
+pack.extend( byte_arr[5:] ) #data
+print(pack[0:4])
+print(pack[4:8])
+print(pack[8:])
+tmp.extend(pack[8:])
+print( pickle.loads(tmp) )
 
 
-arr = np.array([[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]],dtype=np.float16)
-b = pickle.dumps( arr )
-
-PORT = "/dev/ttyUSB0"
-BAUD_RATE = 115200
-
-
-def main():
-    device = DigiMeshDevice(PORT, BAUD_RATE)
-
-    try:
-        device.open(force_settings=True)
-        device.send_data_64( XBee64BitAddress.from_hex_string("0013A20041AF1B1A"), b )
-
-    finally:
-        if device is not None and device.is_open():
-            device.close()
-
-
-if __name__ == '__main__':
-    main()
+print(len(byte_arr))
+print(byte_arr[0:175])
