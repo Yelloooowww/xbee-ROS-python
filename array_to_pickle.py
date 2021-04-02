@@ -9,25 +9,21 @@ arr = np.array([[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]], dtype=np.float16)
 byte_arr = pickle.dumps(arr)
 
 pack = bytearray(b'0xAB') #Header
-pack.extend(bytearray(b'0x01')) #Type
-pack.extend( byte_arr[0:5] ) #data
+size = ( len(byte_arr) ).to_bytes(4, byteorder='big')
+print(size)
+print(int.from_bytes( size, byteorder="big",signed=False))
 
-print(pack[0:4])
-print(pack[4:8])
-print(pack[8:])
-
-tmp = bytearray()
-tmp.extend(pack[8:])
-
-pack = bytearray(b'0xAB') #Header
-pack.extend(bytearray(b'0x01')) #Type
-pack.extend( byte_arr[5:] ) #data
-print(pack[0:4])
-print(pack[4:8])
-print(pack[8:])
-tmp.extend(pack[8:])
-print( pickle.loads(tmp) )
-
-
-print(len(byte_arr))
-print(byte_arr[0:175])
+pack = bytearray(b'\xAB') #Header
+pack.extend(bytearray(b'\x01')) #Type
+pack.extend( size ) #bytes
+pack.extend( byte_arr ) #data
+print(pack[0:1])
+print(pack[1:2])
+print(pack[2:6])
+print(int.from_bytes(pack[2:6], byteorder="big",signed=False))
+print(pack[6:])
+print( pickle.loads(pack[6:]) )
+#
+#
+# print(len(byte_arr))
+# print(byte_arr[0:175])

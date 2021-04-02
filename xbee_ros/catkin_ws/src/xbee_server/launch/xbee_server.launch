@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <launch>
     <arg name="port" default="/dev/ttyUSB0" />
-    <arg name="pointcloud_topic" default="/velodyne1/velodyne_points" />
+    <!-- <arg name="pointcloud_topic" default="/velodyne1/velodyne_points" /> -->
     <arg name="auto_ask_flag" default="False" />
     <rosparam command="load" file="$(find xbee_server)/config/robot_xbee.yaml" />
 
     <node name="xbeee_server" pkg="xbee_server" type="receive_point.py" output="screen" required="true">
         <param name="port" value="$(arg port)" />
-        <param name="pointcloud_topic" value="$(arg pointcloud_topic)" />
+        <!-- <param name="pointcloud_topic" value="$(arg pointcloud_topic)" /> -->
         <param name="auto_ask_flag" value="$(arg auto_ask_flag)" />
     </node>
+
 
 </launch>
