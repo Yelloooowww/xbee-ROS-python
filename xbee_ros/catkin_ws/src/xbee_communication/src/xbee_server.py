@@ -15,7 +15,7 @@ from digi.xbee.models.address import *
 from datetime import datetime
 
 # generate test data
-generate_points = np.array( [[1.23, 2.34, 3.45] for i in range(12)] ,dtype=np.float16)
+generate_points = np.array( [[1.23, 2.34, 3.45] for i in range(1234)] ,dtype=np.float16)
 generate_pose = np.array( [1.23, 2.34, 3.45, 4.56, 5.67, 6.78, 7.89] ,dtype=np.float16)
 
 
@@ -32,7 +32,7 @@ class XBee(object):
 
 		self.data_points, self.data_pose = [], []
 		self.data_points, self.data_pose = generate_points, generate_pose # only for test
-		self.check, self.get_register = 0, bytearray()
+		self.check, self.get_register, self.data_bytes = 0, bytearray(), 0
 
 		self.auto_ask_flag = rospy.get_param("~auto_ask_flag")
 		if self.auto_ask_flag:
@@ -66,10 +66,17 @@ class XBee(object):
 							break
 					if self.get_ACK :
 						time1 = time.time()
+						last_len = 0
 						while not self.get_array_checksum :
-							if ((time.time() - time1) > 10) :
-								print('wait checksum TimeOut')
-								break
+							if (time.time() - time1) > 3 :
+								if len(self.get_register) == last_len:
+									print('wait following TimeOut')
+									break
+
+								last_len = len(self.get_register)
+								time1 = time.time()
+								print('Keep receiving ,',len(self.get_register),'/',self.data_bytes,' bytes have received.')
+
 						if self.get_array_checksum :
 							print('success,',self.all_robot_date[robot][ask])
 
@@ -108,9 +115,9 @@ class XBee(object):
 			return
 
 		self.get_register.extend(xbee_message.data[6:])
-		data_bytes = int.from_bytes(xbee_message.data[2:6], byteorder="big",signed=False)
+		self.data_bytes = int.from_bytes(xbee_message.data[2:6], byteorder="big",signed=False)
 
-		if not (data_bytes == len(self.get_register) -1): # still not the last data pkg
+		if not (self.data_bytes == len(self.get_register) -1): # still not the last data pkg
 			self.check = 0xff & (self.check + xbee_message.data[-1])
 
 		else : # the last one of data pkgs
@@ -120,7 +127,7 @@ class XBee(object):
 
 			else : #get data with correct checksum
 				if xbee_message.data[1:2] == b'\x00': # type: string msg
-					get_msg = pickle.loads(self.get_register)
+					get_msg = pickle.loads(self.get_register[:-1])
 					self.check, self.get_register = 0, bytearray()
 					print('get string msg= ',get_msg)
 					if get_msg == "AskPoints":
@@ -134,7 +141,7 @@ class XBee(object):
 					elif get_msg == "Not OK": self.get_ACK = False
 
 				elif xbee_message.data[1:2] == b'\x01': # type: points
-					get_points = pickle.loads(self.get_register)
+					get_points = pickle.loads(self.get_register[:-1])
 					self.check, self.get_register = 0, bytearray()
 					if self.auto_ask_flag:
 						self.all_robot_date[self.address_to_robot[ADDRESS[8:]]]["AskPoints"] = get_points
@@ -143,7 +150,7 @@ class XBee(object):
 
 
 				elif xbee_message.data[1:2] == b'\x02': # type: pose
-					get_pose = pickle.loads(self.get_register)
+					get_pose = pickle.loads(self.get_register[:-1])
 					self.check, self.get_register = 0, bytearray()
 					if self.auto_ask_flag:
 						self.all_robot_date[self.address_to_robot[ADDRESS[8:]]]["AskPose"] = get_pose
@@ -152,7 +159,7 @@ class XBee(object):
 
 
 				elif xbee_message.data[1:2] == b'\x03': # type: goal
-					get_goal = pickle.loads(self.get_register)
+					get_goal = pickle.loads(self.get_register[:-1])
 					self.check, self.get_register = 0, bytearray()
 					print('get_goal= ',get_goal)
 					self.moving_to_goal(get_goal[0], get_goal[1], get_goal[2])
