@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy
-from xbee_server.srv import xbee
+from xbee_communication.srv import xbee
 import random
 import time
 import sys

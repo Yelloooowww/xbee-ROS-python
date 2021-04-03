@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(xbee_server)
+project(xbee_communication)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -46,7 +46,7 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * uncomment the add_*_files sections below as needed
 ##     and list every .msg/.srv/.action file to be processed
 ##   * uncomment the generate_messages entry below
-##   * add every package in MSG_DEP_SET to comm ...)
+##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
 #add_message_files(
@@ -71,7 +71,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  std_msgs
   std_msgs
 )
 
