@@ -1,113 +1,29 @@
 # XBee Communication
-
-This package allows you to transfer Apriltags messages or SubTInfo (artifacts poses + robots poses) with XBee modules.
-
-Note: Please use the spelling 'XBee' with capital X and B in any formal documents.
-
-## How to run (One to One)
-### Give XBee a static usb port /dev/xbee
-Do it on every machine you wanna use XBee
-```
-$ source set_xbee_port.sh
-```
-
-### On the machine sending messages
-```
-$ rosrun xbee_communication xbee_encoder
-```
-another terminal
-```
-$ python3 misc/xbee_operation.py
-```
-### On the machine receiving messages
-```
-$ rosrun xbee_communication xbee_decoder
-```
-another terminal
-```
-$ python3 misc/xbee_operation.py
-```
-
-## How to run (Mesh)
-### Give XBee a static usb port /dev/xbee
-Do it on every machine you wanna use XBee
-```
-$ source set_xbee_port.sh
-```
-
-### On the machine sending messages
-```
-$ rosrun xbee_communication xbee_encoder
-```
-another terminal
-```
-$ python3 misc/xbee_mesh_robot.py
-```
-### On the mesh nodes machines
-```
-$ python3 misc/xbee_mesh.py
-```
-### On the machine receiving messages
-```
-$ rosrun xbee_communication xbee_decoder
-```
-another terminal
-```
-$ python3 misc/xbee_mesh_base.py
-```
-
-## Topic info
-### On machine sending messages
-
-Subscribe:
-```
-# Apriltags Detection Array - type: AprilTagDetectionArray
-topic:
-/tag_detections
-
-# SubT info (robot pose + artifact pose) - type: SubTInfo
-topic:
-/subt_info
-```
-
-### On machine receiving messages
-
-Publish:
-```
-# Apriltags Detection Array - type: AprilTagDetectionArray
-topic:
-/apriltags_from_xbee
-
-# SubT info (robot pose + artifact pose) - type: SubTInfo
-topic:
-/xBee_subt_info
-
-# Artifact Pose - type: ArtifactPoseArray
-topic:
-/artifact_pose_list
-```
-
-
 ## How to run (ROS server)
 ### System setting
-check port
+check port `ls /dev/ttyUSB*`
 
-`ls /dev/ttyUSB*`
-
-change mode
-
-`sudo chmod 777 /dev/ttyUSB0`
+change mode `sudo chmod 777 /dev/ttyUSB0`
 
 ### Data packet design
 the only one or the last one data packet
 
-| Header | type | bytes | bytes | bytes | bytes | realdata | ...... | realdata |
-|--------|------|-------|-------|-------|-------|----------|--------|----------|
+| Header | type | bytes | bytes | bytes | bytes | realdata | ...... | realdata | checksun |
+|--------|------|-------|-------|-------|-------|----------|--------|----------|----------|
 
 else (not the last one)
 
-| Header | type | bytes | bytes | bytes | bytes | realdata | ...... | realdata | checksun |
-|--------|------|-------|-------|-------|-------|----------|--------|----------|----------|
+| Header | type | bytes | bytes | bytes | bytes | realdata | ...... | realdata |
+|--------|------|-------|-------|-------|-------|----------|--------|----------|
+
++ Header `b'\xAB'`
++ type
+  + string msg `b'\x00'`
+  + points `b'\x01'`
+  + pose `b'\x02'`
+  + goal `b'\x03'`
++ bytes `total length (bytes) of real data`
+
 
 ### Usage (robot)
 launch server node
@@ -115,22 +31,36 @@ launch server node
 `roslaunch xbee_communication xbee_server.launch port:="/dev/ttyUSB0"`
 
 ### Usage (base station)
+#### Auto
+launch server node
+
+`roslaunch xbee_communication xbee_server.launch port:="/dev/ttyUSB0" auto_ask_flag:=True`
+
+The server node will keep updating a table (dictionary) with a timer function
+
+|        | husky1 | husky2 | jackal1 | jackal2 |
+|--------|--------|--------|---------|---------|
+| Points |        |        |         |         |
+| Pose   |        |        |         |         |
+
+#### Manual
+##### Terminal 1
 launch server node
 
 `roslaunch xbee_communication xbee_server.launch port:="/dev/ttyUSB0"`
+##### Terminal 2
+send a string (HIHIHI) to a robot or a device with specific address
 
-send a string (HIHIHI) to a device with specific address (41AF1A91)
+`rosrun xbee_communication xbee_client.py husky1 HIHIHI` or `rosrun xbee_communication xbee_client.py 41AF1A91 HIHIHI`
 
-`rosrun xbee_communication xbee_client.py 41AF1A91 HIHIHI`
+ask a robot or a device with specific address to send the points data
 
-ask a device with specific address (41AF1A91) to send the points data
+`rosrun xbee_communication xbee_client.py husky1 AskPoints` or `rosrun xbee_communication xbee_client.py 41AF1A91 AskPoints`
 
-`rosrun xbee_communication xbee_client.py 41AF1A91 AskPoints`
+ask a robot or a device with specific address to send the pose data
 
-ask a device with specific address (41AF1A91) to send the pose data
+`rosrun xbee_communication xbee_client.py husky1 AskPose` or `rosrun xbee_communication xbee_client.py 41AF1A91 AskPose`
 
-`rosrun xbee_communication xbee_client.py 41AF1A91 AskPose`
+ask a robot or a device with specific address to move to the goal (1.23,-5.43,0.79)
 
-ask a device with specific address (41AF1A91) to move to the goal (1.23,-5.43,0.79)
-
-`rosrun xbee_communication xbee_client.py 41AF1A91 Move 1.23 -5.43 0.79`
+`rosrun xbee_communication xbee_client.py husky1 Move 1.23 -5.43 0.79` or `rosrun xbee_communication xbee_client.py 41AF1A91 Move 1.23 -5.43 0.79`

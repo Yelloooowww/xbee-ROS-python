@@ -15,7 +15,7 @@ from digi.xbee.models.address import *
 from datetime import datetime
 
 # generate test data
-generate_points = np.array( [[1.23, 2.34, 3.45] for i in range(1234)] ,dtype=np.float16)
+generate_points = np.array( [[1.23, 2.34, 3.45] for i in range(12345)] ,dtype=np.float16)
 generate_pose = np.array( [1.23, 2.34, 3.45, 4.56, 5.67, 6.78, 7.89] ,dtype=np.float16)
 
 
@@ -27,16 +27,14 @@ class XBee(object):
 		self.device.open(force_settings=True)
 		self.device.add_data_received_callback(self.xbee_callback_and_decode)
 		self.sourceAddr = str(self.device.get_64bit_addr())
-
 		self.service = rospy.Service('xbee', xbee, self.handle_ros_service)
-
 		self.data_points, self.data_pose = [], []
 		self.data_points, self.data_pose = generate_points, generate_pose # only for test
 		self.check, self.get_register, self.data_bytes = 0, bytearray(), 0
 
 		self.auto_ask_flag = rospy.get_param("~auto_ask_flag")
 		if self.auto_ask_flag:
-			self.timer = rospy.Timer(rospy.Duration(5), self.auto_ask_timer)
+			self.timer = rospy.Timer(rospy.Duration(1), self.auto_ask_timer)
 			self.get_ACK, self.get_array_checksum = None, None
 			self.address_to_robot = {	rospy.get_param("/xbee_address/husky1"):"husky1", \
 										rospy.get_param("/xbee_address/husky2"):"husky2", \
@@ -63,22 +61,27 @@ class XBee(object):
 					while self.get_ACK == None :
 						if ((time.time() - time0) > 1) :
 							print('wait ACK TimeOut')
+							self.check, self.get_register, self.data_bytes, self.get_ACK, self.get_array_checksum = 0, bytearray(), 0, None, None
 							break
 					if self.get_ACK :
 						time1 = time.time()
 						last_len = 0
 						while not self.get_array_checksum :
-							if (time.time() - time1) > 3 :
+							time.sleep(0.1)
+							if (time.time() - time1) > 1 :
+								print('Keep receiving ,',len(self.get_register),'/',self.data_bytes,' bytes have received.')
 								if len(self.get_register) == last_len:
 									print('wait following TimeOut')
+									self.check, self.get_register, self.data_bytes, self.get_ACK, self.get_array_checksum = 0, bytearray(), 0, None, None
 									break
 
 								last_len = len(self.get_register)
 								time1 = time.time()
-								print('Keep receiving ,',len(self.get_register),'/',self.data_bytes,' bytes have received.')
+
 
 						if self.get_array_checksum :
 							print('success,',self.all_robot_date[robot][ask])
+
 
 
 
