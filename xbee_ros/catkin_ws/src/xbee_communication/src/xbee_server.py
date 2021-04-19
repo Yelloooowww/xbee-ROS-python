@@ -33,20 +33,20 @@ class XBee(object):
 		self.check, self.get_register, self.data_bytes = 0, bytearray(), 0
 
 		self.auto_ask_flag = rospy.get_param("~auto_ask_flag")
-		if self.auto_ask_flag:
-			self.timer = rospy.Timer(rospy.Duration(1), self.auto_ask_timer)
-			self.get_ACK, self.get_array_checksum = None, None
-			self.address_to_robot = {	rospy.get_param("/xbee_address/husky1"):"husky1", \
-										rospy.get_param("/xbee_address/husky2"):"husky2", \
-										rospy.get_param("/xbee_address/jackal1"):"jackal1", \
-										rospy.get_param("/xbee_address/jackal2"):"jackal2"  }
-			self.robot_to_address = {v: k for k, v in self.address_to_robot.items()}
-			self.all_robot_date = dict()
-			for robot in ["husky1", "husky2", "jackal1", "jackal2"]:
-				one_robot_date = dict()
-				for ask in ["AskPoints", "AskPose"]:
-					one_robot_date[ask] = []
-				self.all_robot_date[robot] = one_robot_date
+		# if self.auto_ask_flag:
+		self.timer = rospy.Timer(rospy.Duration(5), self.auto_ask_timer)
+		self.get_ACK, self.get_array_checksum = None, None
+		self.address_to_robot = {	rospy.get_param("/xbee_address/husky1"):"husky1", \
+									rospy.get_param("/xbee_address/husky2"):"husky2", \
+									rospy.get_param("/xbee_address/jackal1"):"jackal1", \
+									rospy.get_param("/xbee_address/jackal2"):"jackal2"  }
+		self.robot_to_address = {v: k for k, v in self.address_to_robot.items()}
+		self.all_robot_date = dict()
+		for robot in ["husky1", "husky2", "jackal1", "jackal2"]:
+			one_robot_date = dict()
+			for ask in ["AskPoints", "AskPose"]:
+				one_robot_date[ask] = []
+			self.all_robot_date[robot] = one_robot_date
 
 		print("xbee node initialized, I am ", self.sourceAddr[8:])
 

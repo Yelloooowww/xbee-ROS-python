@@ -1,7 +1,7 @@
 ---
 xbee_address:
-  base_station: 41AF1B1A
-  husky1: 417E6274
+  base_station: 41AF1A91
+  husky1: 41AF1A91
   husky2: 41AF1A91
-  jackal1: 417E628A
-  jackal2: 41AF1C55
+  jackal1: 41AF1A91
+  jackal2: 41AF1A91
