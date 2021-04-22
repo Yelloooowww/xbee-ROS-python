@@ -79,10 +79,15 @@ import numpy as np
 # plt.scatter(x, y, s=area, c=colors, alpha=0.5)
 # plt.show()
 
+anchor_x = [10*2,10*2+28,10*2]
+anchor_y = [-1.75,1.75,2*26+1.75]
+
+startx = [1]
+starty = [1]
 
 x1 = [2*i for i in range(37)]
-x2 = [23*2 for i in range(26)]
-x3 = [23*2-2*i for i in range(13)]
+x2 = [10*2 for i in range(26)]
+x3 = [10*2-2*i for i in range(13)]
 y1 = [0 for i in range(37)]
 y2 = [2*i for i in range(26)]
 y3 = [2*26 for i in range(13)]
@@ -104,12 +109,16 @@ rssi = rssi + [99 for i in range(21)]
 x = np.array(x1 + x2 + x3)
 y = np.array(y1 + y2 + y3)
 x, y = -1*x, -1*y #rotate
-# print(len(x),len(rssi))
-# plt.scatter(x, y, c=rssi, cmap='RdYlGn')
-# plt.colorbar()
-# plt.title("xbee RSSI")
-# plt.axis('off')
-# plt.show()
+anchor_x, anchor_y = -1*np.array(anchor_x), -1*np.array(anchor_y)
+
+plt.scatter(anchor_x, anchor_y, color='k', marker='^')
+plt.scatter(startx, starty, color='c', marker='*')
+plt.scatter(x, y, c=rssi, cmap='RdYlGn')
+plt.colorbar()
+plt.title("xbee RSSI")
+plt.axis('off')
+plt.legend(['anchor','start point'])
+plt.show()
 #
 #
 speed = [7987.2 for i in range(12)]
@@ -127,9 +136,11 @@ speed = speed + [ 7884.8,7884.8,7987.2,7987.2,7987.2, \
                   3891.2,3788.8,3686.4,3891.2,3788.8, \
                   3686.4,3584.0,3584.0,3584.0]
 
-print(len(speed))
+plt.scatter(anchor_x, anchor_y, color='k', marker='^')
+plt.scatter(startx, starty, color='c', marker='*')
 plt.scatter(x, y, c=speed, cmap='hsv')
 plt.colorbar()
 plt.title("xbee transition speed (bytes per second)")
 plt.axis('off')
+plt.legend(['anchor','start point'])
 plt.show()
