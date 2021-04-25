@@ -30,13 +30,13 @@ import numpy as np
 
 
 
-# y = [40,48,44,45,43,55,46,48,50,44,57,55,48,57,58,56,60,59,57,58,59,66]
-# x = [i for i in range(22)]
-# plt.plot(x, y, marker="s")
-# plt.xlabel("meters beyond the corner ")
-# plt.ylabel("RSSI")
-# plt.title("xbee RSSI")
-# plt.show()
+y = [40,48,44,45,43,55,46,48,50,44,57,55,48,57,58,56,60,59,57,58,59,66]
+x = [i for i in range(22)]
+plt.plot(x, y, marker="s")
+plt.xlabel("meters beyond the corner ")
+plt.ylabel("RSSI")
+plt.title("xbee RSSI")
+plt.show()
 
 # y = [5324.8,5324.8,5324.8,5324.8,5324.8,5324.8,5324.8,5324.8,5222.4,3072.0,3993.6,3276.8,3481.6,3174.4,3379.2,3276.8,3993.6,3686.4,3788.8,3891.2,102.4,0]
 # x = [i for i in range(22)]
@@ -146,11 +146,11 @@ import numpy as np
 # plt.show()
 
 
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-import numpy as np
-img=mpimg.imread('/home/yellow/Pictures/rviz_screenshot_2021_04_23-14_41_50.png')
-imgplot = plt.imshow(img,extent=(60,-22, 25, -22.5))
-plt.xlabel("x(m)")
-plt.ylabel("y(m)")
-plt.show()
+# import matplotlib.pyplot as plt
+# import matplotlib.image as mpimg
+# import numpy as np
+# img=mpimg.imread('/home/yellow/Pictures/rviz_screenshot_2021_04_23-14_41_50.png')
+# imgplot = plt.imshow(img,extent=(60,-22, 25, -22.5))
+# plt.xlabel("x(m)")
+# plt.ylabel("y(m)")
+# plt.show()
