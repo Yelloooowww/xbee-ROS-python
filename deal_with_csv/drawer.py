@@ -24,6 +24,7 @@ anchor_text = ['A19','A16','A12']
 startx = [-1.5]
 starty = [-3]
 
+
 plt.scatter(anchor_x, anchor_y, color='k', marker='^')
 for i in range(3): plt.text(anchor_x[i]+0.75, anchor_y[i]-0.75, anchor_text[i])
 plt.scatter(startx, starty, color='c', marker='*')
