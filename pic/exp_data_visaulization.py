@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+plt.rcParams.update({'font.size': 36})
 
 # x = np.linspace(0,10,31)
 #
@@ -146,11 +147,11 @@ plt.show()
 # plt.show()
 
 
-# import matplotlib.pyplot as plt
-# import matplotlib.image as mpimg
-# import numpy as np
-# img=mpimg.imread('/home/yellow/Pictures/rviz_screenshot_2021_04_23-14_41_50.png')
-# imgplot = plt.imshow(img,extent=(60,-22, 25, -22.5))
-# plt.xlabel("x(m)")
-# plt.ylabel("y(m)")
-# plt.show()
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import numpy as np
+img=mpimg.imread('/home/yellow/Pictures/rviz_screenshot_2021_04_23-14_41_50.png')
+imgplot = plt.imshow(img,extent=(60,-22, 25, -22.5))
+plt.xlabel("x(m)")
+plt.ylabel("y(m)")
+plt.show()

@@ -2,24 +2,24 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
 import csv
-
-with open('uwb_A19.csv', newline='') as f:
+plt.rcParams.update({'font.size': 36})
+with open('xbee_A19.csv', newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
 # print(data)
 x, y, rssi = [],[],[]
-# x = [float(data[i][0]) for i in range(1,len(data))]
-# y = [float(data[i][1]) for i in range(1,len(data))]
-# rssi = [int(data[i][8]) for i in range(1,len(data))]
-for i in range(1,len(data)):
-    if data[i][4] != '':
-        if (int(data[i][3])>-110) and (int(data[i][3])<-60):
-            x.append( float(data[i][1]) )
-            y.append( float(data[i][2]) )
-            # xbee normalize: (D+90)/(-40+90)*100
-            # UWB normalize:(D+110)/(-60+110)*100
-            rssi.append( (int(data[i][3])+110)/(-60+110)*100 )
+x = [float(data[i][1]) for i in range(1,len(data))]
+y = [float(data[i][2]) for i in range(1,len(data))]
+rssi = [int(data[i][3]) for i in range(1,len(data))]
+# for i in range(1,len(data)):
+#     if data[i][4] != '':
+#         if (int(data[i][3])>-110) and (int(data[i][3])<-60):
+#             x.append( float(data[i][1]) )
+#             y.append( float(data[i][2]) )
+#             # xbee normalize: (D+90)/(-40+90)*100
+#             # UWB normalize:(D+110)/(-60+110)*100
+#             rssi.append( (int(data[i][3])+110)/(-60+110)*100 )
 
 anchor_x = [-1.5,17,17]
 anchor_y = [0,0,52]
