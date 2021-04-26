@@ -235,6 +235,8 @@ uwb_alldis = uwb_A19dis + uwb_A16dis + uwb_A12dis
 plt.plot(xbee_allLOSdis, xbee_allLOSrssi, marker="^", linestyle='None', zorder=0)
 plt.plot(xbee_allNLOSdis, xbee_allNLOSrssi, marker="*", linestyle='None', zorder=0)
 plt.plot(uwb_alldis, uwb_allrssi, marker=".", linestyle='None', zorder=0)
+plt.axhline(y=66.6667)
+plt.axhline(y=40)
 # plt.legend(['A19_XBee_LOS','A19_XBee_NLOS','A19_UWB_LOS','A16_XBee_LOS','A16_XBee_NLOS','A16_UWB_LOS','A12_XBee_LOS','A12_XBee_NLOS','A12_UWB_LOS'])
 plt.legend(['XBee_LOS','XBee_NLOS','UWB_LOS'])
 plt.xlabel("meters")
@@ -259,3 +261,11 @@ print('UWB_LOS_avg=',UWB_LOS_avg)
 print('XBee_LOS_std=',XBee_LOS_std)
 print('XBee_NLOS_std=',XBee_NLOS_std)
 print('UWB_LOS_std=',UWB_LOS_std)
+
+
+# XBee_LOS_avg= -0.7969447193179132
+# XBee_NLOS_avg= -4.097210385819467
+# UWB_LOS_avg= -2.5472935263442036
+# XBee_LOS_std= 0.135609573978108
+# XBee_NLOS_std= 1.7293017138284628
+# UWB_LOS_std= 0.5915854984596933
