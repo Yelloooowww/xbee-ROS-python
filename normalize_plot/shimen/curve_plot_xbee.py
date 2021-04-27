@@ -27,12 +27,14 @@ corner3 = np.array(raw_x[162], raw_y[162])
 corner_x = [raw_x[15], raw_x[75], raw_x[162]]
 corner_y = [raw_y[15], raw_y[75], raw_y[162]]
 
+fig = plt.figure()
 plt.scatter(raw_x, raw_y)
 plt.scatter(corner_x, corner_y)
 plt.colorbar()
 plt.ylim(-270,30)
 plt.xlim(-150,150)
 plt.show()
+fig.savefig('xbee/raw_odom')
 
 modify_data = []
 tmpx, tmpy = raw_x[15], raw_y[15]
@@ -99,32 +101,64 @@ print(np.shape(modify_data))
 print(np.shape(carx))
 print(np.shape(cary))
 print(np.shape(carrssi))
-# for i in range(len(carx)):
-#     plt.scatter(carx[i], cary[i], c=carrssi[i])
-#     plt.colorbar()
-#     plt.title('XBee normalized RSSI '+anchor_list[i])
-#     plt.xlim(-25,175)
-#     plt.ylim(-25,175)
-#     plt.show()
+for i in range(len(carx)):
+    fig = plt.figure()
+    plt.scatter(carx[i], cary[i], c=carrssi[i])
+    plt.colorbar()
+    plt.title('XBee normalized RSSI '+anchor_list[i])
+    plt.xlim(-25,175)
+    plt.ylim(-25,175)
+    plt.show()
+    fig.savefig('xbee/'+'XBee_normalized_RSSI_'+anchor_list[i])
 
 
 #LOS: A0, A04, A17
+fig = plt.figure()
 #regression
 dis_for_regA0 = [distance(carx[0][i]-115,cary[0][i]) for i in range(len(carrssi[0]))]
-plt.scatter(dis_for_regA0,carrssi[0])
+A0plot, = plt.plot(dis_for_regA0,carrssi[0], marker="^", linestyle='None')
 slopeA0, intercept, r_value, p_value, std_err = stats.linregress(dis_for_regA0,carrssi[0])
-xA0 = np.arange(0,170, 0.01)
+xA0 = np.arange(0,150, 0.01)
 lineA0 = slopeA0*xA0+intercept
 plt.plot(xA0, lineA0, 'r')
-plt.text(24, 14,'y = {:.2f}x + {:.2f}'.format(slopeA0,intercept),  color='r')
+plt.text(116.4, 8.4,'y = {:.2f}x + {:.2f}'.format(slopeA0,intercept),  color='r')
+
+dis_for_regA04 = [carx[3][i] for i in range(len(carrssi[3]))]
+A04plot, = plt.plot(dis_for_regA04,carrssi[3], marker="*", linestyle='None')
+slopeA04, intercept, r_value, p_value, std_err = stats.linregress(dis_for_regA04,carrssi[3])
+xA04 = np.arange(0,150, 0.01)
+lineA04 = slopeA04*xA04+intercept
+plt.plot(xA04, lineA04, 'g')
+plt.text(24, 25,'y = {:.2f}x + {:.2f}'.format(slopeA0,intercept),  color='g')
+
+dis_for_regA17 = [distance(0,cary[11][i]-165) for i in range(len(carrssi[11]))]
+A17plot, = plt.plot(dis_for_regA17,carrssi[11], marker="+", linestyle='None')
+slopeA17, intercept, r_value, p_value, std_err = stats.linregress(dis_for_regA17,carrssi[11])
+xA17 = np.arange(0,150, 0.01)
+lineA17 = slopeA17*xA17+intercept
+plt.plot(xA17, lineA17, 'b')
+plt.text(100, 70,'y = {:.2f}x + {:.2f}'.format(slopeA17,intercept),  color='b')
+
+plt.title('shimen XBee LOS')
+plt.xlabel('meter')
+plt.ylabel('normalized RSSI')
+plt.legend([A0plot,A04plot,A17plot],['A0','A04','A17'])
 plt.show()
-# reg_uwb_A19dis,reg_uwb_A19rssi = [], []
-# for i,item in enumerate(uwb_A19dis) :
-#     if item < 20:
-#         reg_uwb_A19dis.append(uwb_A19dis[i])
-#         reg_uwb_A19rssi.append(uwb_A19rssi[i])
-# slopeuwb_A19, intercept, r_value, p_value, std_err = stats.linregress(reg_uwb_A19dis,reg_uwb_A19rssi)
-# xuwb_A19 = np.arange(0,20, 0.01)
-# lineuwb_A19 = slopeuwb_A19*xuwb_A19+intercept
-# plt.plot(xuwb_A19, lineuwb_A19, 'r')
-# plt.text(24, 14,'y = {:.2f}x + {:.2f}'.format(slopeuwb_A19,intercept),  color='r')
+fig.savefig('xbee/shimen_XBee_LOS')
+
+#NLOS: A06
+fig = plt.figure()
+dis_for_regA06 = [cary[4][i] for i in range(len(carrssi[4]))]
+A06plot, = plt.plot(dis_for_regA06,carrssi[4], marker="*", linestyle='None')
+slopeA06, intercept, r_value, p_value, std_err = stats.linregress(dis_for_regA06[-2:],carrssi[4][-2:])
+xA06 = np.arange(4,12, 0.01)
+lineA06 = slopeA06*xA06+intercept
+plt.plot(xA06, lineA06, 'g')
+plt.text(6, 80,'y = {:.2f}x + {:.2f}'.format(slopeA06,intercept),  color='g')
+
+plt.title('shimen XBee NLOS')
+plt.xlabel('meter')
+plt.ylabel('normalized RSSI')
+plt.legend([A06plot],['A06'])
+plt.show()
+fig.savefig('xbee/shimen_XBee_NLOS')
