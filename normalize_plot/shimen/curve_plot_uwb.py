@@ -133,7 +133,7 @@ xA17 = np.arange(0,35, 0.01)
 lineA17 = slopeA17*xA17+intercept
 plt.plot(xA17, lineA17, 'b')
 plt.text(20, 92,'y = {:.2f}x + {:.2f}'.format(slopeA17,intercept),  color='b')
-
+plt.hlines((-90+110)/(-80+110)*100,xmin=0,xmax=50)
 plt.title('shimen UWB LOS')
 plt.xlabel('meter')
 plt.ylabel('normalized RSSI')
