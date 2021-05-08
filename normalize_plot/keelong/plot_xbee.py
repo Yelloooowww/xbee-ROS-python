@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 from scipy import stats
-# plt.rcParams.update({'font.size': 36})
+plt.rcParams.update({'font.size': 36})
 
 def distance(x,y):
     return (x**2 + y**2)**0.5
@@ -161,7 +161,7 @@ slope_NA11, intercept, r_value, p_value, std_err = stats.linregress(dis_for_reg_
 x_NA11 = np.arange(2,5, 0.01)
 line_NA11 = slope_NA11*x_NA11+intercept
 plt.plot(x_NA11, line_NA11, 'g')
-plt.text(1,45,'y = {:.2f}x + {:.2f}'.format(slope_NA04,intercept),  color='g')
+plt.text(1,45,'y = {:.2f}x + {:.2f}'.format(slope_NA11,intercept),  color='g')
 plt.text(corner_x[0]+1,corner_y[0]+1,'A11',  color='r')
 plt.text(corner_x[1]+1,corner_y[1]+1,'A24',  color='r')
 plt.text(corner_x[2]+1,corner_y[2]+1,'A19',  color='r')

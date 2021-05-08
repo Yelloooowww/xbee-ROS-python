@@ -2,41 +2,43 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 from scipy import stats
-
+plt.rcParams.update({'font.size': 36})
+# xbee normalize: (D+90)/(-40+90)*100
+# uwb normalize:(D+110)/(-80+110)*100
 with open('xbee_A19.csv', newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
-def reg(x,y):
-    coefficients = np.polyfit(x,y,1) # 利用 polyfit 幫我們算出資料 一階擬合的 a, b 參數
-    p = np.poly1d(coefficients) # 做出公式, print 的結果是 coefficients[0] * X + coefficients[1]
-    #coefficient_of_dermination = r2_score(y, p(x)) // 計算相關係數用，這裡沒有用到
-    return coefficients, p
+# def reg(x,y):
+#     coefficients = np.polyfit(x,y,1) # 利用 polyfit 幫我們算出資料 一階擬合的 a, b 參數
+#     p = np.poly1d(coefficients) # 做出公式, print 的結果是 coefficients[0] * X + coefficients[1]
+#     #coefficient_of_dermination = r2_score(y, p(x)) // 計算相關係數用，這裡沒有用到
+#     return coefficients, p
 # 70~153
-rssi = np.array([float(data[i][3]) for i in range(70,90)])
+rssi = np.array([(float(data[i][3])+90)/(-40+90)*100 for i in range(70,90)])
 dis = np.array([float(data[i][2]) for i in range(70,90)])
-print('immediate RSSI drop=',(rssi[2]-rssi[0])/(dis[2]-dis[0]))
+# print('immediate RSSI drop=',(rssi[2]-rssi[0])/(dis[2]-dis[0]))
 
-#regression part
-slope, intercept, r_value, p_value, std_err = stats.linregress(dis[2:-1],rssi[2:-1])
-x = np.arange(3,40)
-line = slope*x+intercept
-plt.plot(x, line, 'r', label='y={:.2f}x+{:.2f}'.format(slope,intercept))
+# #regression part
+# slope, intercept, r_value, p_value, std_err = stats.linregress(dis[2:-1],rssi[2:-1])
+# x = np.arange(3,40)
+# line = slope*x+intercept
+# plt.plot(x, line, 'r', label='y={:.2f}x+{:.2f}'.format(slope,intercept))
+#
+# #error part
+# err_x = [[i,i] for i in range(5,40,4)] # 要连接的两个点的坐标
+# err_y = [ [ max(rssi[i:i+4]), min(rssi[i:i+4]) ] for i in range(0,len(rssi),2)]
+# print(len(err_x))
+# for i in range(len(err_x)):
+#     plt.plot(err_x[i], err_y[i], color='r')
+#     plt.text(err_x[i][0], err_y[i][0], 'err='+str(int(err_y[i][0]-err_y[i][1])),  color='r')
 
-#error part
-err_x = [[i,i] for i in range(5,40,4)] # 要连接的两个点的坐标
-err_y = [ [ max(rssi[i:i+4]), min(rssi[i:i+4]) ] for i in range(0,len(rssi),2)]
-print(len(err_x))
-for i in range(len(err_x)):
-    plt.plot(err_x[i], err_y[i], color='r')
-    plt.text(err_x[i][0], err_y[i][0], 'err='+str(int(err_y[i][0]-err_y[i][1])),  color='r')
-
-plt.text(29, -45,'y = {:.2f}x + {:.2f}'.format(slope,intercept),  color='r')
-plt.plot(dis, rssi, marker="s")
-plt.xlabel("meters beyond the corner ")
-plt.ylabel("RSSI")
-plt.title("xbee NLOS RSSI")
-plt.show()
+# plt.text(29, -45,'y = {:.2f}x + {:.2f}'.format(slope,intercept),  color='r')
+xbeeNLOS, = plt.plot(dis, rssi, marker="^", linestyle='None',markersize=12)
+# plt.xlabel("meters beyond the corner ")
+# plt.ylabel("RSSI")
+# plt.title("xbee NLOS RSSI")
+# plt.show()
 
 
 # import matplotlib.pyplot as plt
@@ -48,7 +50,7 @@ plt.show()
 # with open('uwb_A19.csv', newline='') as f:
 #     reader = csv.reader(f)
 #     data = list(reader)
-#
+
 # def reg(x,y):
 #     coefficients = np.polyfit(x,y,1) # 利用 polyfit 幫我們算出資料 一階擬合的 a, b 參數
 #     p = np.poly1d(coefficients) # 做出公式, print 的結果是 coefficients[0] * X + coefficients[1]
@@ -57,7 +59,7 @@ plt.show()
 # # 2930~2992
 # rssi = np.array([float(data[i][3]) for i in range(2923,2992)])
 # dis = np.array([float(data[i][2]) for i in range(2923,2992)])
-#
+
 # #regression part
 # slope, intercept, r_value, p_value, std_err = stats.linregress(dis[0:-2],rssi[0:-2])
 # x = np.arange(0.4, 1.6, 0.01)
@@ -87,19 +89,19 @@ plt.show()
 # import csv
 # from scipy import stats
 #
-# with open('xbee_A19.csv', newline='') as f:
-#     reader = csv.reader(f)
-#     data = list(reader)
-#
+with open('xbee_A19.csv', newline='') as f:
+    reader = csv.reader(f)
+    data = list(reader)
+
 # def reg(x,y):
 #     coefficients = np.polyfit(x,y,1) # 利用 polyfit 幫我們算出資料 一階擬合的 a, b 參數
 #     p = np.poly1d(coefficients) # 做出公式, print 的結果是 coefficients[0] * X + coefficients[1]
 #     #coefficient_of_dermination = r2_score(y, p(x)) // 計算相關係數用，這裡沒有用到
 #     return coefficients, p
-# #11~45
-# rssi = np.array([float(data[i][3]) for i in range(8,43)])
-# dis = np.array([float(data[i][1]) for i in range(8,43)])
-#
+#11~45
+rssi = np.array([(float(data[i][3])+90)/(-40+90)*100 for i in range(8,43)])
+dis = np.array([float(data[i][1]) for i in range(8,43)])
+
 # #regression part
 # slope, intercept, r_value, p_value, std_err = stats.linregress(dis,rssi)
 # x = np.arange(0,70)
@@ -115,7 +117,7 @@ plt.show()
 #     plt.text(err_x[i][0], 0.5+err_y[i][0], 'err='+str(int(err_y[i][0]-err_y[i][1])),  color='r')
 #
 # plt.text(50, -41,'y = {:.2f}x + {:.2f}'.format(slope,intercept),  color='r')
-# plt.plot(dis, rssi, marker="s")
+xbeeLOS, = plt.plot(dis, rssi, marker="s", linestyle='None',markersize=16)
 # plt.xlabel("meters")
 # plt.ylabel("RSSI")
 # plt.title("xbee LOS RSSI")
@@ -128,18 +130,18 @@ plt.show()
 # from scipy import stats
 # from statistics import mean
 #
-# with open('uwb_A19.csv', newline='') as f:
-#     reader = csv.reader(f)
-#     data = list(reader)
-#
+with open('uwb_A19.csv', newline='') as f:
+    reader = csv.reader(f)
+    data = list(reader)
+
 # def reg(x,y):
 #     coefficients = np.polyfit(x,y,1) # 利用 polyfit 幫我們算出資料 一階擬合的 a, b 參數
 #     p = np.poly1d(coefficients) # 做出公式, print 的結果是 coefficients[0] * X + coefficients[1]
 #     #coefficient_of_dermination = r2_score(y, p(x)) // 計算相關係數用，這裡沒有用到
 #     return coefficients, p
-# # 444~1574
-# rssi = np.array([float(data[i][3]) for i in range(444,1500)])
-# dis = np.array([float(data[i][1]) for i in range(444,1500)])
+# 444~1574
+rssi = np.array([(float(data[i][3])+110)/(-80+110)*100 for i in range(444,1500)])
+dis = np.array([float(data[i][1]) for i in range(444,1500)])
 #
 # #regression part
 # slope, intercept, r_value, p_value, std_err = stats.linregress(dis[0:-100],rssi[0:-100])
@@ -158,8 +160,9 @@ plt.show()
 #     plt.text(err_x[i][0], 0.1+err_y[i][0], 'err='+str(int(err_y[i][0]-err_y[i][1])),  color='r',zorder=20+i)
 #
 # plt.text(50, -84,'y = {:.2f}x + {:.2f}'.format(slope,intercept),  color='r')
-# plt.plot(dis, rssi, marker="s",zorder=0)
-# plt.xlabel("meters")
-# plt.ylabel("RSSI")
-# plt.title("uwb LOS RSSI")
-# plt.show()
+uwbLOS, = plt.plot(dis, rssi, marker="*",zorder=0, linestyle='None',markersize=10)
+plt.xlabel("meters")
+plt.ylabel("normalized RSSI")
+plt.title("indoor UWB & XBee RSSI")
+plt.legend([xbeeLOS,xbeeNLOS,uwbLOS],['XBee LOS','XBee NLOS','UWB LOS'])
+plt.show()

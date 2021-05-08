@@ -96,15 +96,15 @@ print(np.shape(modify_data))
 print(np.shape(carx))
 print(np.shape(cary))
 print(np.shape(carrssi))
-for i in range(len(carx)):
-    fig = plt.figure()
-    plt.scatter(carx[i], cary[i], c=carrssi[i])
-    plt.colorbar()
-    plt.title('UWB normalized RSSI, tag='+str(anchor_list[i]))
-    plt.xlim(-25,175)
-    plt.ylim(-25,175)
-    plt.show()
-    fig.savefig('uwb/'+'UWB_normalized_RSSI_'+str(anchor_list[i]))
+# for i in range(len(carx)):
+#     fig = plt.figure()
+#     plt.scatter(carx[i], cary[i], c=carrssi[i])
+#     plt.colorbar()
+#     plt.title('UWB normalized RSSI, tag='+str(anchor_list[i]))
+#     plt.xlim(-25,175)
+#     plt.ylim(-25,175)
+#     plt.show()
+#     fig.savefig('uwb/'+'UWB_normalized_RSSI_'+str(anchor_list[i]))
 
 
 #LOS: A0, A04, A17
@@ -124,7 +124,7 @@ slopeA04, intercept, r_value, p_value, std_err = stats.linregress(dis_for_regA04
 xA04 = np.arange(0,10, 0.01)
 lineA04 = slopeA04*xA04+intercept
 plt.plot(xA04, lineA04, 'g')
-plt.text(20, 100,'y = {:.2f}x + {:.2f}'.format(slopeA0,intercept),  color='g')
+plt.text(20, 100,'y = {:.2f}x + {:.2f}'.format(slopeA04,intercept),  color='g')
 
 dis_for_regA17 = [distance(0,cary[9][i]-165) for i in range(len(carrssi[9]))]
 A17plot, = plt.plot(dis_for_regA17,carrssi[9], marker="+", linestyle='None')
@@ -137,7 +137,7 @@ plt.hlines((-90+110)/(-80+110)*100,xmin=0,xmax=50)
 plt.title('shimen UWB LOS')
 plt.xlabel('meter')
 plt.ylabel('normalized RSSI')
-plt.legend([A0plot,A04plot,A17plot],['26380','26453','27211'])
+# plt.legend([A0plot,A04plot,A17plot],['26380','26453','27211'])
 plt.show()
 fig.savefig('uwb/shimenUWBLOS')
 
